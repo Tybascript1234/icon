@@ -284,4 +284,7 @@ body .CodeMirror-vscrollbar {
     button,.logo {
         cursor: context-menu;
     }
+    body .home-work-button {
+        opacity: 1;
+    }
 }
