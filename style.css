@@ -72,7 +72,9 @@ body .CodeMirror-vscrollbar {
     height: 60px;
     margin-bottom: 30px;
     box-shadow: 0px 1px 0px #e2e9ef;
-    position: relative;
+    background-color: white;
+    position: sticky;
+    top: 0;
     z-index: 200;
 }
 .logo {
@@ -287,5 +289,9 @@ body .CodeMirror-vscrollbar {
     }
     body .home-work-button {
         opacity: 1;
+    }
+    body .menu-button .buttonx {
+        height: 32px;
+        padding: 0px 16px;
     }
 }
