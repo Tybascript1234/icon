@@ -294,4 +294,7 @@ body .CodeMirror-vscrollbar {
         height: 32px;
         padding: 0px 16px;
     }
+    body .div-image {
+        height: 200px;
+    }
 }
