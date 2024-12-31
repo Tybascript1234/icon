@@ -287,4 +287,7 @@ body .CodeMirror-vscrollbar {
     body .home-work-button {
         opacity: 1;
     }
+    body .div-image {
+        height: 200px;
+    }
 }
