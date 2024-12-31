@@ -270,6 +270,7 @@ body .CodeMirror-vscrollbar {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #0000;
 }
 .omy-button button:hover {
     background-color: #29292911;
@@ -286,8 +287,5 @@ body .CodeMirror-vscrollbar {
     }
     body .home-work-button {
         opacity: 1;
-    }
-    body .div-image {
-        height: 200px;
     }
 }
