@@ -8,8 +8,14 @@ body {
     font-family: Arial;
     /* line-height: 0; */
 }
+html iframe body {
+    margin: 0;
+}
 button {
     cursor: pointer;
+}
+body style attribute {
+    width: auto;
 }
 ion-icon {
     position: relative;
@@ -94,14 +100,14 @@ we {
     margin-left: 8px;
     border: none;
     border-radius: 25px;
-    background: #3b3b3b;
-    color: white;
+    background: rgb(232, 240, 254);
+    color: rgb(25, 103, 210);
 }
 .close-btn:hover {
-    background: rgba(58, 58, 58, 0.856);
+    background: rgb(214 229 255);
 }
 .close-btn:active {
-    background: rgba(58, 58, 58, 0.699);
+    transform: scale(0.95);
 }
 
 /* ----------------------------------------- */
@@ -180,8 +186,9 @@ we {
     width: max-content;
     padding: 12px;
     border-radius: 10px;
-    background: #7a7f891c;
-    border: solid 1px #7a7f8970;
+    background: #7a7f8900;
+    /* border: solid 1px #7a7f8970; */
+    box-shadow: 0px 3px 9px #00000012;
     overflow: hidden;
 }
 .home-work work:hover .home-work-button  {
@@ -198,14 +205,16 @@ we {
     background: #0000;
 }
 .home-work-button {
-    opacity: .0;
-    position: absolute;
-    right: 0;
-    bottom: 0;
+    position: relative;
     margin: 12px;
+    margin-top: 0;
+    padding-top: 6px;
+    margin-bottom: 0;
     display: flex;
     align-items: center;
     z-index: 20;
+    justify-content: right;
+    border-top: solid 1px #dddddd;
 }
 .menu-button {
     display: flex;
@@ -213,23 +222,23 @@ we {
 }
 .home-work-button button {
     transition: ease 0.2s;
-    width: 38px;
-    height: 38px;
+    width: 48px;
+    height: 33px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 18px;
+    font-size: 17px;
     margin-left: 8px;
     border: none;
     border-radius: 25px;
-    background: #3b3b3b;
-    color: white;
+    background: rgb(232, 240, 254);
+    color: rgb(25, 103, 210);
 }
 .home-work-button button:hover {
-    background: rgba(58, 58, 58, 0.856);
+    background: rgb(214 229 255);
 }
 .home-work-button button:active {
-    background: rgba(58, 58, 58, 0.699);
+    transform: scale(0.95);
 }
 .Languag {
     position: relative;
@@ -265,13 +274,13 @@ we {
     user-select: none;
     margin-top: 16px;
     border-radius: 16px;
-    background: #0000009c;
+    background: #f3f0ef9c;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     max-width: -webkit-fill-available;
-    border: solid 2px #636363;
+    border: solid 2px #fdfdfd00;
 }
 .div-image::before {
     content: '';
@@ -285,7 +294,7 @@ we {
 .div-image img {
     height: -webkit-fill-available;
     border-radius: 14px;
-    box-shadow: 0px 1px 8px #000;
+    box-shadow: 0px 1px 5px #0000004a;
 }
 
 
@@ -295,7 +304,7 @@ we {
     width: 100%;
     height: 50px;
     margin-top: 70px;
-    background: #f1f3f5;
+    border-top: solid 1px #e2e9ef;
 }
 .omy-div {
     width: 985px;
@@ -312,6 +321,7 @@ we {
     align-items: center;
 }
 .omy-button button {
+    transition: ease 0.2s;
     width: 35px;
     height: 35px;
     border: none;
@@ -321,13 +331,36 @@ we {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #0000;
+    /* background-color: #0000; */
+    background: rgb(232, 240, 254);
+    color: rgb(25, 103, 210);
 }
 .omy-button button:hover {
-    background-color: #29292911;
+    background: rgb(214 229 255);
 }
 .omy-button button:active {
-    background-color: #2929292d;
+    transform: scale(0.95);
+}
+
+body .bold {
+    font-family: "Roboto", arial, sans-serif;
+    position: relative;
+    /* font-weight: 600; */
+    width: fit-content;
+    padding: 0px 5px;
+    padding-bottom: 7px;
+    color: rgb(26, 115, 232);
+}
+body .bold::before {
+    position: absolute;
+    content: '';
+    left: 0;
+    bottom: 0;
+    background: rgb(26 115 232);
+    padding: 0px 11px;
+    width: -webkit-fill-available;
+    z-index: -1;
+    height: 8%;
 }
 
 
@@ -351,8 +384,5 @@ we {
     }
     body .CodeMirror-scroll {
         max-width: -webkit-fill-available;
-    }
-    body .CodeMirror-hscrollbar {
-        scrollbar-width: none;
     }
 }
