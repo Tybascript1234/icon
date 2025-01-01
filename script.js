@@ -55,9 +55,56 @@ window.onload = function() {
             }
         });
 
+        const runButton = document.createElement("button");
+        runButton.innerHTML = '<ion-icon name="open-outline"></ion-icon>';
+        runButton.addEventListener("click", function() {
+            let outputDiv = document.getElementById(`output-div-${index}`);
+
+            // إذا لم يكن الـ div موجودًا، أنشئه
+            if (!outputDiv) {
+                outputDiv = document.createElement("div");
+                outputDiv.id = `output-div-${index}`;
+                outputDiv.style.position = "fixed";
+                outputDiv.style.top = "0";
+                outputDiv.style.left = "0";
+                outputDiv.style.width = "100%";
+                outputDiv.style.height = "100%";
+                outputDiv.style.background = "white";
+                outputDiv.style.zIndex = "1000";
+
+                const closeButton = document.createElement("button");
+                closeButton.innerHTML = '<ion-icon name="close-outline"></ion-icon>';
+                closeButton.style.position = "absolute";
+                closeButton.style.top = "5px";
+                closeButton.style.right = "5px";
+                closeButton.classList.add("close-btn"); // إضافة الكلاس هنا
+                closeButton.addEventListener("click", function() {
+                    outputDiv.remove();
+                });
+
+                const outputFrame = document.createElement("iframe");
+                outputFrame.id = `output-${index}`;
+                outputFrame.style.width = "100%";
+                outputFrame.style.height = "100%";
+                outputFrame.style.border = "none";
+
+                outputDiv.appendChild(closeButton);
+                outputDiv.appendChild(outputFrame);
+                document.body.appendChild(outputDiv);
+            }
+
+            // اكتب الكود في الـ iframe
+            const code = editor.getValue();
+            const outputFrame = document.getElementById(`output-${index}`);
+            outputFrame.contentWindow.document.open();
+            outputFrame.contentWindow.document.write(code);
+            outputFrame.contentWindow.document.close();
+        });
+
         // إضافة الأزرار إلى الحاوية
         buttonsContainer.appendChild(copyButton);
         buttonsContainer.appendChild(shareButton);
+        buttonsContainer.appendChild(runButton);
 
         // إضافة الأزرار أسفل كل محرر
         textarea.parentElement.appendChild(buttonsContainer);
