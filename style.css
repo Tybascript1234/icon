@@ -352,4 +352,7 @@ we {
     body .CodeMirror-scroll {
         max-width: -webkit-fill-available;
     }
+    body .CodeMirror-hscrollbar {
+        scrollbar-width: none;
+    }
 }
