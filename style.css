@@ -182,6 +182,7 @@ we {
     border-radius: 10px;
     background: #7a7f891c;
     border: solid 1px #7a7f8970;
+    overflow: hidden;
 }
 .home-work work:hover .home-work-button  {
     opacity: 1;
@@ -195,7 +196,6 @@ we {
     border: none;
     outline: none;
     background: #0000;
-    overflow: hidden;
 }
 .home-work-button {
     opacity: .0;
