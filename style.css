@@ -46,6 +46,7 @@ body .CodeMirror-scroll {
     width: min-content;
     padding: 0;
     scrollbar-width: none;
+    max-width: 569px;
 }
 body .CodeMirror-gutter-elt {
     text-align: center;
