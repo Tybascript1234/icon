@@ -321,4 +321,7 @@ we {
     body .xo:hover {
         text-decoration: underline;
     }
+    body .CodeMirror-scroll {
+        max-width: -webkit-fill-available;
+    }
 }
