@@ -195,6 +195,7 @@ we {
     border: none;
     outline: none;
     background: #0000;
+    overflow: hidden;
 }
 .home-work-button {
     opacity: .0;
