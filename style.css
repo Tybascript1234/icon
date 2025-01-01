@@ -27,6 +27,14 @@ a {
     text-decoration: none;
     color: #292929;
 }
+.xo {
+    transition: ease 0.3s;
+    color: #2383dd;
+    text-decoration: none;
+}
+.xo:hover {
+    color: #0067b8;
+}
 hr {
     border: none;
     height: 1px;
@@ -55,7 +63,17 @@ body .CodeMirror-gutter-elt {
 body .CodeMirror-vscrollbar {
     scrollbar-width: none;
 }
+body .CodeMirror-hscrollbar {
+    scrollbar-width: thin;
+}
 
+we {
+    background-image: url(https://unpkg.com/ionicons@7.1.0/dist/svg/arrow-forward-outline.svg);
+    height: 17px;
+    width: 17px;
+    display: inline-flex;
+    opacity: .5;
+}
 
 /* ----------------------------------------- */
 .home {
@@ -203,18 +221,20 @@ body .CodeMirror-vscrollbar {
     content: '';
     position: absolute;
     right: 0;
-    top: -6px;
+    top: -11px;
     width: 100px;
-    height: 6px;
+    height: 11px;
 }
 .Languag:hover .Languag-div {
     display: block;
 }
 
 .div-image {
+    transition: ease 0.3s;
     position: relative;
     width: 498px;
     height: 253px;
+    user-select: none;
     margin-top: 16px;
     border-radius: 16px;
     background: #0000009c;
@@ -285,7 +305,7 @@ body .CodeMirror-vscrollbar {
 
 
 @media screen and (max-width: 768px) {
-    button,.logo {
+    button,.logo,a {
         cursor: context-menu;
     }
     body .home-work-button {
@@ -297,5 +317,8 @@ body .CodeMirror-vscrollbar {
     }
     body .div-image {
         height: 200px;
+    }
+    body .xo:hover {
+        text-decoration: underline;
     }
 }
