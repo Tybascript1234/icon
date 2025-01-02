@@ -71,6 +71,7 @@ body .CodeMirror-vscrollbar {
 }
 body .CodeMirror-hscrollbar {
     scrollbar-width: thin;
+    scrollbar-color: #00000012 transparent;
 }
 body .cm-s-default .cm-comment {
     color: #3eaa00;
