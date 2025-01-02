@@ -399,4 +399,11 @@ body .bold::before {
         width: 35px;
         height: 35px;
     }
+    body .CodeMirror {
+        height: 193px;
+    }
+    .home-work work {
+        padding: 12px 7px;
+        padding-top: 7px;
+    }
 }
