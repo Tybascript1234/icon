@@ -1,388 +1,139 @@
-body {
-    padding: 0;
-    margin: 0;
-    font-size: 14px;
-    width: 100%;
-    height: 100vh;
-    color: #292929;
-    font-family: Arial;
-    /* line-height: 0; */
-}
-html iframe body {
-    margin: 0;
-}
-button {
-    cursor: pointer;
-}
-body style attribute {
-    width: auto;
-}
-ion-icon {
-    position: relative;
-    display: block;
-}
-ion-icon::before {
-    position: absolute;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-}
-a {
-    text-decoration: none;
-    color: #292929;
-}
-.xo {
-    transition: ease 0.3s;
-    color: #2383dd;
-    text-decoration: none;
-}
-.xo:hover {
-    color: #0067b8;
-}
-hr {
-    border: none;
-    height: 1px;
-    margin: 16px 0;
-    background: #e2e9ef;
-}
+window.onload = function() {
+    // حدد جميع عناصر textarea مع الفئة "editor"
+    const editors = document.querySelectorAll(".editor");
 
-body .CodeMirror {
-    border-radius: 5px;
-    height: 100px;
-}
-body .CodeMirror span {
-    font-weight: 600;
-    font-family: system-ui;
-}
-body .CodeMirror-scroll {
-    width: min-content;
-    padding: 0;
-    scrollbar-width: none;
-    max-width: 569px;
-}
-body .CodeMirror-gutter-elt {
-    text-align: center;
-}
+    // مر على كل عنصر وأضف محررًا وأزرارًا
+    editors.forEach((textarea, index) => {
+        // إنشاء CodeMirror لكل محرر
+        const editor = CodeMirror.fromTextArea(textarea, {
+            lineNumbers: true,
+            mode: "javascript",
+            theme: "default",
+            extraKeys: { "Ctrl-Space": "autocomplete" },
+            hintOptions: { completeSingle: false }
+        });
 
-body .CodeMirror-vscrollbar {
-    scrollbar-width: none;
-}
-body .CodeMirror-hscrollbar {
-    scrollbar-width: thin;
-}
-body .cm-s-default .cm-comment {
-    color: #3eaa00;
-    font-weight: 400;
-}
+        // تحسين التكميل التلقائي أثناء الكتابة
+        editor.on("inputRead", function(cm, change) {
+            if (change.text[0] && /[a-zA-Z0-9$_]/.test(change.text[0])) {
+                cm.showHint({ completeSingle: false });
+            }
+        });
 
-we {
-    background-image: url(https://unpkg.com/ionicons@7.1.0/dist/svg/arrow-forward-outline.svg);
-    height: 17px;
-    width: 17px;
-    display: inline-flex;
-    opacity: .5;
-}
+        // إنشاء عناصر الأزرار
+        const buttonsContainer = document.createElement("div");
+        buttonsContainer.className = "home-work-button";
 
-.div-image,.home-work-button,.home-work work {
-    transition: ease 0.3s;
-}
+        const copyButton = document.createElement("button");
+        copyButton.innerHTML = '<ion-icon name="copy"></ion-icon>';
+        copyButton.addEventListener("click", function() {
+            const code = editor.getValue();
+            navigator.clipboard.writeText(code).then(() => {
+                const originalContent = copyButton.innerHTML;
+                copyButton.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon>';
+                setTimeout(() => {
+                    copyButton.innerHTML = originalContent;
+                }, 1000);
+            }).catch(err => {
+                console.error("فشل النسخ: ", err);
+            });
+        });
 
-.close-btn {
-    transition: ease 0.2s;
-    width: 38px;
-    height: 38px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    margin-left: 8px;
-    border: none;
-    border-radius: 25px;
-    background: rgb(232, 240, 254);
-    color: rgb(25, 103, 210);
-}
-.close-btn:hover {
-    background: rgb(214 229 255);
-}
-.close-btn:active {
-    transform: scale(0.95);
-}
+        const shareButton = document.createElement("button");
+        shareButton.innerHTML = '<ion-icon name="share-social"></ion-icon>';
+        shareButton.addEventListener("click", function() {
+            const code = editor.getValue();
+            if (navigator.share) {
+                navigator.share({
+                    title: "مشاركة الكود",
+                    text: code
+                }).catch(err => {
+                    console.error("فشل المشاركة: ", err);
+                });
+            } else {
+                alert("ميزة المشاركة غير مدعومة في هذا المتصفح.");
+            }
+        });
 
-/* ----------------------------------------- */
-.home {
-    height: 100%;
-    width: 1017px;
-    max-width: 100%;
-    margin: auto;
-    height: max-content;
-}
-.menu {
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    margin-bottom: 30px;
-    box-shadow: 0px 1px 0px #e2e9ef;
-    background-color: white;
-    position: sticky;
-    top: 0;
-    z-index: 200;
-}
-.logo {
-    cursor: pointer;
-    user-select: none;
-    font-size: 20px;
-    font-weight: 700;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    width: -webkit-fill-available;
-}
-.logo:hover {
-    color: #2929299a;
-}
-.logo:active {
-    color: #292929d0;
-}
-.menu-button .buttonx {
-    transition: ease 0.2s;
-    height: 35px;
-    padding: 0px 19px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    background: #365c6b12;
-    color: #697384;
-    margin-left: 10px;
-}
-.menu-button .buttonx:hover {
-    background: #3f616b1f;
-}
-.menu-button .buttonx:active {
-    transform: scale(0.95);
-}
-.menu-button .buttonx:focus {
-    box-shadow: 0 0 0 1px #e2e9ef;
+        const runButton = document.createElement("button");
+        runButton.innerHTML = '<ion-icon name="open-outline"></ion-icon>';
+        runButton.addEventListener("click", function() {
+            let outputDiv = document.getElementById(`output-div-${index}`);
+
+// إذا لم يكن الـ div موجودًا، أنشئه
+if (!outputDiv) {
+    const outputDiv = document.createElement("div");
+    outputDiv.id = `output-div-${index}`;
+    outputDiv.style.position = "fixed";
+    outputDiv.style.top = "0";
+    outputDiv.style.left = "0";
+    outputDiv.style.width = "100%";
+    outputDiv.style.height = "100%";
+    outputDiv.style.background = "white";
+    outputDiv.style.zIndex = "1000";
+    outputDiv.style.display = "flex";
+    outputDiv.style.justifyContent = "center";
+    outputDiv.classList.add("my-class"); // إضافة الكلاس
+                
+    // إنشاء الزر
+    const closeButton = document.createElement("button");
+    closeButton.innerHTML = '<ion-icon name="close-outline"></ion-icon>';
+    closeButton.style.position = "absolute";
+    closeButton.style.top = "5px";
+    // closeButton.style.right = "5px";
+    closeButton.classList.add("close-btn"); // إضافة الكلاس هنا
+    closeButton.addEventListener("click", function() {
+        outputDiv.remove();
+    });
+    
+    // إضافة الزر إلى الـ div
+    outputDiv.appendChild(closeButton);
+    
+    // إضافة الحدث للـ div
+    outputDiv.addEventListener("mousemove", function (event) {
+      if (event.clientY <= 20) {
+        // إذا كان المؤشر ضمن 20px من الأعلى
+        closeButton.style.margin = "100px"; // تغيير استايل الزر
+        closeButton.style.color = "white";
+        
+        // إزالة الاستايل بعد 3 ثوانٍ
+        clearTimeout(outputDiv._hideTimer);
+        outputDiv._hideTimer = setTimeout(() => {
+          closeButton.style.margin = ""; // إزالة الاستايل
+          closeButton.style.color = "";
+        }, 3000);
+      }
+    });
+    
+    // إضافة الـ div إلى المستند
+    document.body.appendChild(outputDiv);
+
+    const outputFrame = document.createElement("iframe");
+    outputFrame.id = `output-${index}`;
+    outputFrame.style.width = "100%";
+    outputFrame.style.height = "100%";
+    outputFrame.style.border = "none";
+
+    outputDiv.appendChild(closeButton);
+    outputDiv.appendChild(outputFrame);
+    document.body.appendChild(outputDiv);
 }
 
 
-/* home-work */
-.home-work {
-    padding: 0 16px;
-}
-.home-work zo {
-    display: block;
-    font-size: 18px;
-    font-weight: 500;
-    margin: 16px 0;
-}
-.home-work work {
-    max-width: -webkit-fill-available;
-    position: relative;
-    display: block;
-    width: max-content;
-    padding: 12px;
-    border-radius: 10px;
-    background: #7a7f8900;
-    /* border: solid 1px #7a7f8970; */
-    box-shadow: 0px 3px 9px #00000012;
-    overflow: hidden;
-}
-.home-work work:hover .home-work-button  {
-    opacity: 1;
-}
-.home-work work textarea {
-    font-size: 16px;
-    resize: none;
-    width: 600px;
-    height: 135px;
-    display: block;
-    border: none;
-    outline: none;
-    background: #0000;
-}
-.home-work-button {
-    position: relative;
-    margin: 12px;
-    margin-top: 0;
-    padding-top: 6px;
-    margin-bottom: 0;
-    display: flex;
-    align-items: center;
-    z-index: 20;
-    justify-content: right;
-    border-top: solid 1px #dddddd;
-}
-.menu-button {
-    display: flex;
-    align-items: center;
-}
-.home-work-button button {
-    transition: ease 0.2s;
-    width: 48px;
-    height: 33px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 17px;
-    margin-left: 8px;
-    border: none;
-    border-radius: 25px;
-    background: rgb(232, 240, 254);
-    color: rgb(25, 103, 210);
-}
-.home-work-button button:hover {
-    background: rgb(214 229 255);
-}
-.home-work-button button:active {
-    transform: scale(0.95);
-}
-.Languag {
-    position: relative;
-}
-.Languag .buttonx {
-    background-color: #0000;
-    box-shadow: 0 0 0 1px #e2e9ef;
-}
-.Languag-div {
-    position: absolute;
-    display: none;
-    top: 42px;
-    right: -4px;
-    /* padding: 3px; */
-    background: #0000;
-}
-.Languag-div::before {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: -11px;
-    width: 100px;
-    height: 11px;
-}
-.Languag:hover .Languag-div {
-    display: block;
-}
+            // اكتب الكود في الـ iframe
+            const code = editor.getValue();
+            const outputFrame = document.getElementById(`output-${index}`);
+            outputFrame.contentWindow.document.open();
+            outputFrame.contentWindow.document.write(code);
+            outputFrame.contentWindow.document.close();
+        });
 
-.div-image {
-    position: relative;
-    width: 498px;
-    height: 253px;
-    user-select: none;
-    margin-top: 16px;
-    border-radius: 16px;
-    background: #f3f0ef9c;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    max-width: -webkit-fill-available;
-    border: solid 2px #fdfdfd00;
-}
-.div-image::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-}
-.div-image img {
-    height: -webkit-fill-available;
-    border-radius: 14px;
-    box-shadow: 0px 1px 5px #0000004a;
-}
+        // إضافة الأزرار إلى الحاوية
+        buttonsContainer.appendChild(copyButton);
+        buttonsContainer.appendChild(shareButton);
+        buttonsContainer.appendChild(runButton);
 
-
-/* omy */
-.omy {
-    display: block;
-    width: 100%;
-    height: 50px;
-    margin-top: 70px;
-    border-top: solid 1px #e2e9ef;
-}
-.omy-div {
-    width: 985px;
-    height: 100%;
-    padding: 0 16px;
-    max-width: -webkit-fill-available;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: auto;
-}
-.omy-button {
-    display: flex;
-    align-items: center;
-}
-.omy-button button {
-    transition: ease 0.2s;
-    width: 35px;
-    height: 35px;
-    border: none;
-    border-radius: 25px;
-    margin-left: 8px;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* background-color: #0000; */
-    background: rgb(232, 240, 254);
-    color: rgb(25, 103, 210);
-}
-.omy-button button:hover {
-    background: rgb(214 229 255);
-}
-.omy-button button:active {
-    transform: scale(0.95);
-}
-
-body .bold {
-    font-family: "Roboto", arial, sans-serif;
-    position: relative;
-    /* font-weight: 600; */
-    width: fit-content;
-    padding: 0px 5px;
-    padding-bottom: 7px;
-    color: rgb(26, 115, 232);
-}
-body .bold::before {
-    position: absolute;
-    content: '';
-    left: 0;
-    bottom: 0;
-    background: rgb(26 115 232);
-    padding: 0px 11px;
-    width: -webkit-fill-available;
-    z-index: -1;
-    height: 8%;
-}
-
-
-
-@media screen and (max-width: 768px) {
-    button,.logo,a {
-        cursor: context-menu;
-    }
-    body .home-work-button {
-        opacity: 1;
-    }
-    body .menu-button .buttonx {
-        height: 32px;
-        padding: 0px 16px;
-    }
-    body .div-image {
-        height: 200px;
-    }
-    body .xo:hover {
-        text-decoration: underline;
-    }
-    body .CodeMirror-scroll {
-        max-width: -webkit-fill-available;
-    }
-}
+        // إضافة الأزرار أسفل كل محرر
+        textarea.parentElement.appendChild(buttonsContainer);
+    });
+};
