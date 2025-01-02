@@ -60,38 +60,65 @@ window.onload = function() {
         runButton.addEventListener("click", function() {
             let outputDiv = document.getElementById(`output-div-${index}`);
 
-            // إذا لم يكن الـ div موجودًا، أنشئه
-            if (!outputDiv) {
-                outputDiv = document.createElement("div");
-                outputDiv.id = `output-div-${index}`;
-                outputDiv.style.position = "fixed";
-                outputDiv.style.top = "0";
-                outputDiv.style.left = "0";
-                outputDiv.style.width = "100%";
-                outputDiv.style.height = "100%";
-                outputDiv.style.background = "white";
-                outputDiv.style.zIndex = "1000";
+// إذا لم يكن الـ div موجودًا، أنشئه
+if (!outputDiv) {
+    const outputDiv = document.createElement("div");
+    outputDiv.id = `output-div-${index}`;
+    outputDiv.style.position = "fixed";
+    outputDiv.style.top = "0";
+    outputDiv.style.left = "0";
+    outputDiv.style.width = "100%";
+    outputDiv.style.height = "100%";
+    outputDiv.style.background = "white";
+    outputDiv.style.zIndex = "1000";
+    outputDiv.style.display = "flex";
+    outputDiv.style.justifyContent = "center";
+    outputDiv.classList.add("my-class"); // إضافة الكلاس
+                
+    // إنشاء الزر
+    const closeButton = document.createElement("button");
+    closeButton.innerHTML = '<ion-icon name="close-outline"></ion-icon>';
+    closeButton.style.position = "absolute";
+    closeButton.style.top = "5px";
+    // closeButton.style.right = "5px";
+    closeButton.classList.add("close-btn"); // إضافة الكلاس هنا
+    closeButton.addEventListener("click", function() {
+        outputDiv.remove();
+    });
+    
+    // إضافة الزر إلى الـ div
+    outputDiv.appendChild(closeButton);
+    
+    // إضافة الحدث للـ div
+    outputDiv.addEventListener("mousemove", function (event) {
+      if (event.clientY <= 20) {
+        // إذا كان المؤشر ضمن 20px من الأعلى
+        closeButton.style.margin = "100px"; // تغيير استايل الزر
+        closeButton.style.color = "white";
+        
+        // إزالة الاستايل بعد 3 ثوانٍ
+        clearTimeout(outputDiv._hideTimer);
+        outputDiv._hideTimer = setTimeout(() => {
+          closeButton.style.margin = ""; // إزالة الاستايل
+          closeButton.style.color = "";
+        }, 3000);
+      }
+    });
+    
+    // إضافة الـ div إلى المستند
+    document.body.appendChild(outputDiv);
 
-                const closeButton = document.createElement("button");
-                closeButton.innerHTML = '<ion-icon name="close-outline"></ion-icon>';
-                closeButton.style.position = "absolute";
-                closeButton.style.top = "5px";
-                closeButton.style.right = "5px";
-                closeButton.classList.add("close-btn"); // إضافة الكلاس هنا
-                closeButton.addEventListener("click", function() {
-                    outputDiv.remove();
-                });
+    const outputFrame = document.createElement("iframe");
+    outputFrame.id = `output-${index}`;
+    outputFrame.style.width = "100%";
+    outputFrame.style.height = "100%";
+    outputFrame.style.border = "none";
 
-                const outputFrame = document.createElement("iframe");
-                outputFrame.id = `output-${index}`;
-                outputFrame.style.width = "100%";
-                outputFrame.style.height = "100%";
-                outputFrame.style.border = "none";
+    outputDiv.appendChild(closeButton);
+    outputDiv.appendChild(outputFrame);
+    document.body.appendChild(outputDiv);
+}
 
-                outputDiv.appendChild(closeButton);
-                outputDiv.appendChild(outputFrame);
-                document.body.appendChild(outputDiv);
-            }
 
             // اكتب الكود في الـ iframe
             const code = editor.getValue();
