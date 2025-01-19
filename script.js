@@ -184,3 +184,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
+
+// -----------------------------------------------------------------------------------------------------    
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const elements = document.querySelectorAll('.wave-button');
+    
+    elements.forEach(element => {
+
+      function createRipple(e) {
+        const ripple = document.createElement('span');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+
+        let x, y;
+        if (e.clientX && e.clientY) {
+          x = e.clientX - rect.left - size / 2;
+          y = e.clientY - rect.top - size / 2;
+        } 
+        else if (e.touches && e.touches[0]) {
+          x = e.touches[0].clientX - rect.left - size / 2;
+          y = e.touches[0].clientY - rect.top - size / 2;
+        }
+
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        ripple.classList.add('ripple');
+
+        element.appendChild(ripple);
+
+        setTimeout(() => {
+          ripple.remove();
+        }, 600); // مدة الأنيميشن للموجة
+      }
+
+      element.addEventListener('mousedown', (e) => {
+        createRipple(e); // أنشئ الموجة عند الضغط
+      });
+
+      element.addEventListener('touchstart', (e) => {
+        createRipple(e); // أنشئ الموجة عند اللمس
+      });
+    });
+  });
