@@ -3,15 +3,17 @@ body {
     margin: 0;
     font-size: 14px;
     width: 100%;
-    height: 100vh;
+    height: max-content;
     color: #292929;
-    font-family: Arial;
+    font-family: Almarai;
     /* line-height: 0; */
 }
-html iframe body {
+html iframe html body {
     margin: 0;
 }
 button {
+    font-family: Almarai;
+    color: #292929;
     cursor: pointer;
 }
 body style attribute {
@@ -175,6 +177,7 @@ we {
 
 /* home-work */
 .home-work {
+    display: none;
     padding: 0 16px;
 }
 .home-work zo {
@@ -288,6 +291,7 @@ we {
     border: solid 2px #fdfdfd00;
 }
 .div-image::before {
+    transition: ease 0.2s;
     content: '';
     position: absolute;
     left: 0;
@@ -296,10 +300,39 @@ we {
     height: 100%;
     z-index: 10;
 }
+.div-image:hover:before {
+    background-color: #e6e1df3f;
+}
 .div-image img {
     height: -webkit-fill-available;
     border-radius: 14px;
     box-shadow: 0px 1px 5px #0000004a;
+}
+.div-image button {
+    transition: ease 0.2s;
+    position: absolute;
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+    display: flex;
+    opacity: .0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+    background: #ffffff;
+    color: #695a4e;
+    border: none;
+    box-shadow: 0px 1px 13px #87878761, 0px 0px 1px #00000061;
+}
+.div-image button:hover {
+    background: #e5e1df;
+}
+.div-image button:active {
+    transform: scale(0.95);
+}
+.div-image:hover button {
+    opacity: 1;
 }
 
 
@@ -348,7 +381,6 @@ we {
 }
 
 body .bold {
-    font-family: "Roboto", arial, sans-serif;
     position: relative;
     /* font-weight: 600; */
     width: fit-content;
@@ -367,6 +399,126 @@ body .bold::before {
     z-index: -1;
     height: 8%;
 }
+
+/* Open */
+.open {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+.open-button {
+    position: relative;
+    /* font-weight: 600; */
+    width: fit-content;
+    padding: 0px 5px;
+    padding-bottom: 7px;
+    border: none;
+    color: #292929c0;
+    background: #0000;
+    font-size: 16px;
+    margin: 0 10px;
+    padding-bottom: 0;
+    height: 100%;
+}
+.open-button:hover {
+    color: #292929;
+}
+.cold {
+    color: rgb(26, 115, 232);
+}
+.cold:hover {
+    color: rgb(4, 89, 201);
+}
+.cold::before {
+    position: absolute;
+    content: '';
+    left: 0;
+    bottom: 0;
+    background: rgb(26 115 232);
+    padding: 0px 11px;
+    width: -webkit-fill-available;
+    z-index: -1;
+    height: 5%;
+    border-radius: 16px 16px 0px 0px;
+}
+
+
+/* App */
+.App {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    justify-content: space-around;
+}
+.App_button {
+    overflow: hidden;
+    position: relative;
+    padding: 1rem;
+    display: block;
+    text-align: -webkit-center;
+    border: none;
+    height: max-content;
+    width: max-content;
+    border-radius: 14px;
+    width: 302px;
+    background: #0000;
+    border: solid 1px #dee2e6;
+    max-width: -webkit-fill-available;
+}
+.App_button::before {
+    left: 0;
+    top: 0;
+    content: '';
+    display: none;
+    position: absolute;
+    z-index: 10;
+    width: 90%;
+    height: 90%;
+    border-radius: 14px;
+}
+.App_button span,p {
+    display: block;
+    opacity: 0.85;
+    font-size: 22px;
+}
+.im {
+    user-select: none;
+    width: 96px;
+    height: 96px;
+    background-color: #fff;
+    /* margin-right: 10px; */
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* box-shadow: 0px 1px 3px #00000062; */
+}
+.im img {
+    height: 51px;
+}
+.no {
+    transition: ease 0.2s;
+    background: #0d6efd;
+    color: white;
+    border-radius: 8px;
+    height: 40px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+}
+.no:hover {
+    background: #0b65eb;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+
+
 
 
 
@@ -406,5 +558,39 @@ body .bold::before {
     .home-work work {
         padding: 12px 7px;
         padding-top: 7px;
+    }
+    body .open {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        height: 60px;
+        width: 100%;
+        position: fixed;
+        background: white;
+        bottom: 0;
+        left: 0;
+        /* justify-content: center; */
+        border-top: solid 1px #dddddd;
+    }
+    body .omy {
+        margin-bottom: 60px;
+        display: inline-block;
+    }
+    body .xo {
+        display: block;
+    }
+    body .App_button {
+        margin: auto;
+        margin-bottom: 16px;
+    }
+    body .App {
+        justify-content: center;
+    }
+    body .cold::before {
+        margin: 0px 40px;
+        width: -webkit-fill-available;
+    }
+    body .open-button {
+        width: 100%;
     }
 }
