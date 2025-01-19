@@ -563,7 +563,7 @@ body .bold::before {
         display: flex;
         align-items: center;
         justify-content: space-evenly;
-        height: 60px;
+        height: 57px;
         width: 100%;
         position: fixed;
         background: white;
@@ -571,6 +571,7 @@ body .bold::before {
         left: 0;
         /* justify-content: center; */
         border-top: solid 1px #dddddd;
+        padding-bottom: 2px;
     }
     body .omy {
         margin-bottom: 60px;
