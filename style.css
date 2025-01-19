@@ -177,6 +177,7 @@ we {
 
 /* home-work */
 .home-work {
+    animation: rre 0.3s ease forwards;
     display: none;
     padding: 0 16px;
 }
@@ -381,6 +382,7 @@ we {
 }
 
 body .bold {
+    animation: rre 0.3s ease forwards;
     position: relative;
     /* font-weight: 600; */
     width: fit-content;
@@ -430,6 +432,7 @@ body .bold::before {
     color: rgb(4, 89, 201);
 }
 .cold::before {
+    animation: rre 0.3s ease forwards;
     position: absolute;
     content: '';
     left: 0;
@@ -517,6 +520,16 @@ body .bold::before {
     display: block;
 }
 
+@keyframes rre {
+    0% {
+        opacity: .0;
+        margin-bottom: -100px;
+    }
+    100% {
+        
+    }
+}
+
 
 
 
@@ -593,5 +606,7 @@ body .bold::before {
     }
     body .open-button {
         width: 100%;
+        margin: 0;
+        user-select: none;
     }
 }
