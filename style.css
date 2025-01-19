@@ -8,6 +8,28 @@ body {
     font-family: Almarai;
     /* line-height: 0; */
 }
+.wave-button {
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+}
+.wave-button .ripple {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: rgba(230, 230, 230, 0.5);
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes ripple-animation {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
 html iframe html body {
     margin: 0;
 }
@@ -429,6 +451,12 @@ body .bold::before {
 .cold {
     color: rgb(26, 115, 232);
 }
+.cold .ripple {
+    background: rgba(38, 118, 209, 0.11);
+}
+.no.ripple {
+    background: rgba(255, 255, 255, 0.11);
+}
 .cold:hover {
     color: rgb(4, 89, 201);
 }
@@ -502,6 +530,7 @@ body .bold::before {
     height: 51px;
 }
 .no {
+    position: relative;
     transition: ease 0.2s;
     background: #0d6efd;
     color: white;
@@ -515,6 +544,9 @@ body .bold::before {
 }
 .no:hover {
     background: #0b65eb;
+}
+.no:active {
+    transform: scale(0.95);
 }
 
 .tab-content.active {
