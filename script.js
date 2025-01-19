@@ -151,3 +151,36 @@ window.onload = function() {
         textarea.parentElement.appendChild(buttonsContainer);
     });
 };
+
+
+
+
+
+
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.tab-button');
+    const contents = document.querySelectorAll('.tab-content');
+
+    // عند الضغط على زر
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            // إزالة الكلاس "cold" من كل الأزرار
+            buttons.forEach(btn => btn.classList.remove('cold'));
+            // إضافة الكلاس "cold" للزر الحالي
+            button.classList.add('cold');
+
+            // إخفاء كل الديفات
+            contents.forEach(content => content.classList.remove('active'));
+            // عرض الديف المستهدف
+            const target = button.getAttribute('data-target');
+            document.getElementById(target).classList.add('active');
+        });
+    });
+});
+
