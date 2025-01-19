@@ -194,7 +194,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     elements.forEach(element => {
 
+      let isRippleActive = false; // منع الموجة من التكرار إذا كانت مفعلة بالفعل
+
       function createRipple(e) {
+        if (isRippleActive) return; // إذا كانت الموجة مفعلة بالفعل لا تنشأ موجة جديدة
+
+        isRippleActive = true; // تفعيل الموجة
+
         const ripple = document.createElement('span');
         const rect = element.getBoundingClientRect();
         const size = Math.max(rect.width, rect.height);
@@ -216,8 +222,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         element.appendChild(ripple);
 
+        // إزالة الموجة بعد انتهاء الأنيميشن
         setTimeout(() => {
           ripple.remove();
+          isRippleActive = false; // إعادة تفعيل إمكانية إضافة موجة جديدة
         }, 600); // مدة الأنيميشن للموجة
       }
 
