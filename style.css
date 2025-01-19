@@ -409,6 +409,7 @@ body .bold::before {
     height: 100%;
 }
 .open-button {
+    overflow: hidden;
     position: relative;
     /* font-weight: 600; */
     width: fit-content;
