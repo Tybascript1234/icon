@@ -452,10 +452,10 @@ body .bold::before {
     color: rgb(26, 115, 232);
 }
 .cold .ripple {
-    background: rgba(38, 118, 209, 0.11);
+    background: rgba(9, 110, 224, 0.205);
 }
 .no.ripple {
-    background: rgba(255, 255, 255, 0.11);
+    background: rgb(136, 143, 156);
 }
 .cold:hover {
     color: rgb(4, 89, 201);
@@ -641,5 +641,6 @@ body .bold::before {
         width: 100%;
         margin: 0;
         user-select: none;
+        border-radius: 14%;
     }
 }
