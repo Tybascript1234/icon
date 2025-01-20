@@ -167,7 +167,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.tab-button');
     const contents = document.querySelectorAll('.tab-content');
 
-    // عند الضغط على زر
+    // التحقق من وجود hash في الرابط لعرض الديف المناسب
+    const hash = window.location.hash;
+    if (hash) {
+        const targetTab = document.querySelector(`.tab-button[data-target="${hash.slice(1)}"]`);
+        if (targetTab) {
+            buttons.forEach(btn => btn.classList.remove('cold'));
+            targetTab.classList.add('cold');
+            contents.forEach(content => content.classList.remove('active'));
+            document.getElementById(hash.slice(1)).classList.add('active');
+        }
+    } else {
+        // إذا لم يكن هناك hash في الرابط، اعرض الديف الأول بشكل افتراضي
+        buttons[0].classList.add('cold');
+        contents[0].classList.add('active');
+    }
+
+    // عند الضغط على زر، تغيير الرابط وعرض الديف المناسب
     buttons.forEach(button => {
         button.addEventListener('click', () => {
             // إزالة الكلاس "cold" من كل الأزرار
@@ -180,9 +196,21 @@ document.addEventListener('DOMContentLoaded', () => {
             // عرض الديف المستهدف
             const target = button.getAttribute('data-target');
             document.getElementById(target).classList.add('active');
+
+            // تحديث الرابط
+            window.location.hash = target;
         });
     });
+
+    // إضافة رابط نسخ لكل ديف
+    contents.forEach(content => {
+        const link = document.createElement('a');
+        link.href = `#${content.id}`;
+        link.textContent = 'نسخ الرابط';
+        content.appendChild(link);
+    });
 });
+
 
 
 
