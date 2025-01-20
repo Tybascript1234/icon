@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     contents.forEach(content => {
         const link = document.createElement('a');
         link.href = `#${content.id}`;
-        link.textContent = 'نسخ الرابط';
+        link.textContent = '';
         content.appendChild(link);
     });
 });
