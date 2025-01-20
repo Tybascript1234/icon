@@ -58,6 +58,7 @@ a {
     color: #292929;
 }
 .xo {
+    cursor: pointer;
     transition: ease 0.3s;
     color: #2383dd;
     text-decoration: none;
@@ -569,7 +570,7 @@ body .bold::before {
 
 
 @media screen and (max-width: 768px) {
-    button,.logo,a {
+    button,.logo,a,.xo {
         cursor: context-menu;
     }
     body .home-work-button {
@@ -641,6 +642,5 @@ body .bold::before {
         width: 100%;
         margin: 0;
         user-select: none;
-        border-radius: 14%;
     }
 }
