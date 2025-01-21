@@ -266,3 +266,24 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+
+
+
+
+
+
+// ---------------------------------------------------------------------------------------
+
+ // حدد جميع العناصر التي تحتوي على نفس الكلاس
+        const textAreas = document.querySelectorAll('.textArea');
+
+        // أضف مستمعًا للحدث لكل عنصر
+        textAreas.forEach(textArea => {
+            textArea.addEventListener('click', function () {
+                textArea.select(); // تحديد النص
+                document.execCommand('copy'); // نسخ النص إلى الحافظة
+                alert('تم نسخ النص إلى الحافظة!'); // رسالة تأكيد
+            });
+        });
+
+
