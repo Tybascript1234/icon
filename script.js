@@ -1,4 +1,4 @@
-window.onload = function() {
+window.addEventListener("load", function () {
     // حدد جميع عناصر textarea مع الفئة "editor"
     const editors = document.querySelectorAll(".editor");
 
@@ -150,7 +150,7 @@ window.onload = function() {
         // إضافة الأزرار أسفل كل محرر
         textarea.parentElement.appendChild(buttonsContainer);
     });
-};
+});
 
 
 
@@ -166,6 +166,15 @@ window.onload = function() {
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.tab-button');
     const contents = document.querySelectorAll('.tab-content');
+    const line = document.querySelector('.line');
+
+    // تحديث موقع الخط
+    const updateLinePosition = (button) => {
+        const rect = button.getBoundingClientRect();
+        const parentRect = button.parentElement.getBoundingClientRect();
+        line.style.width = `${rect.width}px`;
+        line.style.left = `${rect.left - parentRect.left}px`;
+    };
 
     // التحقق من وجود hash في الرابط لعرض الديف المناسب
     const hash = window.location.hash;
@@ -176,38 +185,34 @@ document.addEventListener('DOMContentLoaded', () => {
             targetTab.classList.add('cold');
             contents.forEach(content => content.classList.remove('active'));
             document.getElementById(hash.slice(1)).classList.add('active');
+            updateLinePosition(targetTab);
         }
     } else {
-        // إذا لم يكن هناك hash في الرابط، اعرض الديف الأول بشكل افتراضي
         buttons[0].classList.add('cold');
         contents[0].classList.add('active');
+        updateLinePosition(buttons[0]);
     }
 
-    // عند الضغط على زر، تغيير الرابط وعرض الديف المناسب
+    // عند الضغط على زر
     buttons.forEach(button => {
         button.addEventListener('click', () => {
-            // إزالة الكلاس "cold" من كل الأزرار
             buttons.forEach(btn => btn.classList.remove('cold'));
-            // إضافة الكلاس "cold" للزر الحالي
             button.classList.add('cold');
 
-            // إخفاء كل الديفات
             contents.forEach(content => content.classList.remove('active'));
-            // عرض الديف المستهدف
             const target = button.getAttribute('data-target');
             document.getElementById(target).classList.add('active');
 
-            // تحديث الرابط
             window.location.hash = target;
+
+            updateLinePosition(button);
         });
     });
 
-    // إضافة رابط نسخ لكل ديف
-    contents.forEach(content => {
-        const link = document.createElement('a');
-        link.href = `#${content.id}`;
-        link.textContent = '';
-        content.appendChild(link);
+    // ضبط موقع الخط عند إعادة التحميل
+    window.addEventListener('resize', () => {
+        const activeButton = document.querySelector('.tab-button.cold');
+        if (activeButton) updateLinePosition(activeButton);
     });
 });
 
@@ -266,24 +271,3 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
-
-
-
-
-
-
-// ---------------------------------------------------------------------------------------
-
- // حدد جميع العناصر التي تحتوي على نفس الكلاس
-        const textAreas = document.querySelectorAll('.textArea');
-
-        // أضف مستمعًا للحدث لكل عنصر
-        textAreas.forEach(textArea => {
-            textArea.addEventListener('click', function () {
-                textArea.select(); // تحديد النص
-                document.execCommand('copy'); // نسخ النص إلى الحافظة
-                alert('تم نسخ النص إلى الحافظة!'); // رسالة تأكيد
-            });
-        });
-
-
