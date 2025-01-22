@@ -219,13 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
 // -----------------------------------------------------------------------------------------------------    
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    const elements = document.querySelectorAll('.wave-button');
+    const elements = document.querySelectorAll('.waveer-button');
     
     elements.forEach(element => {
 
@@ -273,5 +271,3 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
-
-
