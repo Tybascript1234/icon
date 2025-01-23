@@ -162,7 +162,6 @@ window.addEventListener("load", function () {
 
 
 
-// ------------------------------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.tab-button');
     const contents = document.querySelectorAll('.tab-content');
@@ -176,17 +175,25 @@ document.addEventListener('DOMContentLoaded', () => {
         line.style.left = `${rect.left - parentRect.left}px`;
     };
 
+    // وظيفة لتغيير التبويب النشط
+    const activateTab = (targetId) => {
+        buttons.forEach(btn => btn.classList.remove('cold'));
+        contents.forEach(content => content.classList.remove('active'));
+
+        const targetButton = document.querySelector(`.tab-button[data-target="${targetId}"]`);
+        const targetContent = document.getElementById(targetId);
+
+        if (targetButton && targetContent) {
+            targetButton.classList.add('cold');
+            targetContent.classList.add('active');
+            updateLinePosition(targetButton);
+        }
+    };
+
     // التحقق من وجود hash في الرابط لعرض الديف المناسب
     const hash = window.location.hash;
     if (hash) {
-        const targetTab = document.querySelector(`.tab-button[data-target="${hash.slice(1)}"]`);
-        if (targetTab) {
-            buttons.forEach(btn => btn.classList.remove('cold'));
-            targetTab.classList.add('cold');
-            contents.forEach(content => content.classList.remove('active'));
-            document.getElementById(hash.slice(1)).classList.add('active');
-            updateLinePosition(targetTab);
-        }
+        activateTab(hash.slice(1));
     } else {
         buttons[0].classList.add('cold');
         contents[0].classList.add('active');
@@ -196,17 +203,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // عند الضغط على زر
     buttons.forEach(button => {
         button.addEventListener('click', () => {
-            buttons.forEach(btn => btn.classList.remove('cold'));
-            button.classList.add('cold');
-
-            contents.forEach(content => content.classList.remove('active'));
             const target = button.getAttribute('data-target');
-            document.getElementById(target).classList.add('active');
-
-            window.location.hash = target;
-
-            updateLinePosition(button);
+            activateTab(target);
+            window.history.pushState({ target }, '', `#${target}`);
         });
+    });
+
+    // التعامل مع زر الرجوع أو التقدم في المتصفح
+    window.addEventListener('popstate', (event) => {
+        const state = event.state;
+        if (state && state.target) {
+            activateTab(state.target);
+        } else if (window.location.hash) {
+            activateTab(window.location.hash.slice(1));
+        } else {
+            activateTab(buttons[0].getAttribute('data-target'));
+        }
     });
 
     // ضبط موقع الخط عند إعادة التحميل
