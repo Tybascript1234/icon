@@ -283,3 +283,24 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+
+
+
+
+
+
+  function confirmDownload(fileName) {
+    const confirmation = confirm('Android تنزيل التطبيق');
+    if (confirmation) {
+      downloadFile(fileName);
+    }
+  }
+
+  function downloadFile(fileName) {
+    const link = document.createElement('a');
+    link.href = `./path/to/your/files/${fileName}`;  // قم بتحديد مسار الملفات هنا
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
