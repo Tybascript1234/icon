@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   function confirmDownload(fileName) {
-    const confirmation = confirm('Android تنزيل التطبيق');
+    const confirmation = confirm('هل أنت متأكد أنك تريد تنزيل هذا الملف؟');
     if (confirmation) {
       downloadFile(fileName);
     }
@@ -298,9 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function downloadFile(fileName) {
     const link = document.createElement('a');
-    link.href = `./path/to/your/files/${fileName}`;  // قم بتحديد مسار الملفات هنا
+    link.href = `./${fileName}`;  // تعديل المسار حسب مكان وجود الملفات
     link.download = fileName;
-    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
   }
