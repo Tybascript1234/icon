@@ -74,72 +74,40 @@ window.addEventListener("load", function () {
         const runButton = document.createElement("button");
         runButton.innerHTML = '<ion-icon name="open-outline"></ion-icon>';
         runButton.addEventListener("click", function() {
-            let outputDiv = document.getElementById(`output-div-${index}`);
-
-            // إذا لم يكن الـ div موجودًا، أنشئه
-            if (!outputDiv) {
-                const outputDiv = document.createElement("div");
-                outputDiv.id = `output-div-${index}`;
-                outputDiv.style.position = "fixed";
-                outputDiv.style.top = "0";
-                outputDiv.style.left = "0";
-                outputDiv.style.width = "100%";
-                outputDiv.style.height = "100%";
-                outputDiv.style.background = "white";
-                outputDiv.style.zIndex = "1000";
-                outputDiv.style.display = "flex";
-                outputDiv.style.justifyContent = "center";
-                outputDiv.classList.add("my-class"); // إضافة الكلاس
-                
-                // إنشاء الزر
-                const closeButton = document.createElement("button");
-                closeButton.innerHTML = '<ion-icon name="close-outline"></ion-icon>';
-                closeButton.style.position = "absolute";
-                closeButton.style.top = "5px";
-                closeButton.classList.add("close-btn"); // إضافة الكلاس هنا
-                closeButton.addEventListener("click", function() {
-                    outputDiv.remove();
-                });
-                
-                // إضافة الزر إلى الـ div
-                outputDiv.appendChild(closeButton);
-                
-                // إضافة الحدث للـ div
-                outputDiv.addEventListener("mousemove", function (event) {
-                    if (event.clientY <= 0) {
-                        // إذا كان المؤشر ضمن 20px من الأعلى
-                        closeButton.style.margin = "100px"; // تغيير استايل الزر
-                        closeButton.style.color = "white";
-                        
-                        // إزالة الاستايل بعد 3 ثوانٍ
-                        clearTimeout(outputDiv._hideTimer);
-                        outputDiv._hideTimer = setTimeout(() => {
-                            closeButton.style.margin = ""; // إزالة الاستايل
-                            closeButton.style.color = "";
-                        }, 3000);
-                    }
-                });
-                
-                // إضافة الـ div إلى المستند
-                document.body.appendChild(outputDiv);
-
-                const outputFrame = document.createElement("iframe");
-                outputFrame.id = `output-${index}`;
-                outputFrame.style.width = "100%";
-                outputFrame.style.height = "100%";
-                outputFrame.style.border = "none";
-
-                outputDiv.appendChild(closeButton);
-                outputDiv.appendChild(outputFrame);
-                document.body.appendChild(outputDiv);
-            }
-
-            // اكتب الكود في الـ iframe
-            const code = editor.getValue();
-            const outputFrame = document.getElementById(`output-${index}`);
-            outputFrame.contentWindow.document.open();
-            outputFrame.contentWindow.document.write(code);
-            outputFrame.contentWindow.document.close();
+            const outputDiv = document.getElementById("output-div");
+            const outputFrame = document.getElementById("output-frame");
+            const closeButton = outputDiv.querySelector(".close-btn");
+            const reloadButton = outputDiv.querySelector(".reload-btn");
+            
+            // عرض الـ div
+            outputDiv.style.display = "block";
+            
+            // دالة لتحميل المحتوى في الـ iframe
+            const loadContent = () => {
+                const code = editor.getValue();
+                outputFrame.contentWindow.document.open();
+                outputFrame.contentWindow.document.write(code);
+                outputFrame.contentWindow.document.close();
+            };
+            
+            // تحميل المحتوى أول مرة
+            loadContent();
+            
+            // إضافة حدث لإغلاق النافذة
+            closeButton.addEventListener("click", function() {
+                outputDiv.style.display = "none";
+            });
+            
+            // إضافة حدث لإعادة تحميل المحتوى
+            reloadButton.addEventListener("click", function() {
+                loadContent();
+                // إضافة تأثير مرئي للإشارة إلى إعادة التحميل
+                // reloadButton.style.transform = "rotate(360deg)";
+                // reloadButton.style.transition = "transform 0.5s";
+                setTimeout(() => {
+                    reloadButton.style.transform = "rotate(0deg)";
+                }, 500);
+            });
         });
 
         // إضافة الأزرار إلى الحاوية
@@ -151,6 +119,7 @@ window.addEventListener("load", function () {
         textarea.parentElement.appendChild(buttonsContainer);
     });
 });
+
 
 
 
@@ -302,3 +271,67 @@ document.addEventListener('DOMContentLoaded', function() {
     link.download = fileName;
     link.click();
   }
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.click-button');
+    const allMenus = document.querySelectorAll('.menu3');
+    const overlay = document.getElementById('menu-overlay');
+  
+    buttons.forEach(button => {
+      const menuId = button.getAttribute('data-menu');
+      const menu3 = document.getElementById(menuId);
+  
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+  
+        // إغلاق جميع القوائم الأخرى
+        allMenus.forEach(m => m.style.display = 'none');
+  
+        // الحصول على موقع الزر
+        const rect = button.getBoundingClientRect();
+        const menu3Width = menu3.offsetWidth || 150;
+        const menu3Height = menu3.offsetHeight || 120;
+        const margin = 5;
+  
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+  
+        // حساب المسافة الدقيقة مع الأخذ في الاعتبار التمرير
+        let left = rect.left + window.scrollX;
+        let top = rect.bottom + window.scrollY + margin;
+  
+        // التأكد من عدم تجاوز القائمة لحدود النافذة
+        if (rect.left + menu3Width > windowWidth) {
+          left = rect.right + window.scrollX - menu3Width;
+          if (left < 0) left = 0;
+        }
+  
+        if (rect.bottom + menu3Height > windowHeight) {
+          top = rect.top + window.scrollY - menu3Height - margin;
+          if (top < 0) top = 0;
+        }
+  
+        // تعيين الموقع الجديد للقائمة
+        menu3.style.left = `${left}px`;
+        menu3.style.top = `${top}px`;
+        menu3.style.display = 'block';
+  
+        // إظهار الغطاء
+        overlay.style.display = 'block';
+      });
+    });
+  
+    // دالة لإغلاق القوائم
+    function closeMenus() {
+      document.querySelectorAll('.menu3').forEach(menu3 => {
+        menu3.style.display = 'none';
+      });
+      overlay.style.display = 'none';
+    }
+  
+    // إغلاق القائمة عند النقر أو اللمس على الغطاء
+    overlay.addEventListener('mousedown', closeMenus);
+    overlay.addEventListener('touchstart', closeMenus);
+  });
+  
