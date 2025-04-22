@@ -4,7 +4,6 @@ window.addEventListener("load", function () {
 
     // مر على كل عنصر وأضف محررًا وأزرارًا
     editors.forEach((textarea, index) => {
-        // إنشاء CodeMirror لكل محرر
         const editor = CodeMirror.fromTextArea(textarea, {
             lineNumbers: true,
             mode: "javascript",
@@ -13,20 +12,19 @@ window.addEventListener("load", function () {
             hintOptions: { completeSingle: false }
         });
 
-        // تحسين التكميل التلقائي أثناء الكتابة
         editor.on("inputRead", function(cm, change) {
             if (change.text[0] && /[a-zA-Z0-9$_]/.test(change.text[0])) {
                 cm.showHint({ completeSingle: false });
             }
         });
 
-        // إنشاء عناصر الأزرار
         const buttonsContainer = document.createElement("div");
         buttonsContainer.className = "home-work-button";
 
+        // زر النسخ
         const copyButton = document.createElement("button");
         copyButton.innerHTML = '<ion-icon name="copy"></ion-icon>';
-        copyButton.addEventListener("click", function() {
+        copyButton.addEventListener("click", function () {
             const code = editor.getValue();
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(code).then(() => {
@@ -36,7 +34,6 @@ window.addEventListener("load", function () {
                         copyButton.innerHTML = originalContent;
                     }, 1000);
                 }).catch(err => {
-                    console.error("فشل النسخ: ", err);
                     alert("فشل النسخ. جرب متصفحًا أحدث.");
                 });
             } else {
@@ -54,16 +51,16 @@ window.addEventListener("load", function () {
             }
         });
 
+        // زر المشاركة
         const shareButton = document.createElement("button");
         shareButton.innerHTML = '<ion-icon name="share-social"></ion-icon>';
-        shareButton.addEventListener("click", function() {
+        shareButton.addEventListener("click", function () {
             const code = editor.getValue();
             if (navigator.share) {
                 navigator.share({
                     title: "مشاركة الكود",
                     text: code
                 }).catch(err => {
-                    console.error("فشل المشاركة: ", err);
                     alert("فشل المشاركة.");
                 });
             } else {
@@ -71,17 +68,21 @@ window.addEventListener("load", function () {
             }
         });
 
+        // زر التشغيل
         const runButton = document.createElement("button");
         runButton.innerHTML = '<ion-icon name="open-outline"></ion-icon>';
-        runButton.addEventListener("click", function() {
+        runButton.addEventListener("click", function () {
             const outputDiv = document.getElementById("output-div");
             const outputFrame = document.getElementById("output-frame");
             const closeButton = outputDiv.querySelector(".close-btn");
             const reloadButton = outputDiv.querySelector(".reload-btn");
-            
+            const copyFrameUrlButton = document.getElementById("copy-frame-url");
+            const shareFrameUrlButton = document.getElementById("share-frame-url");
+            const fullscreenButton = document.getElementById("fullscreen-frame");
+
             // عرض الـ div
             outputDiv.style.display = "block";
-            
+
             // دالة لتحميل المحتوى في الـ iframe
             const loadContent = () => {
                 const code = editor.getValue();
@@ -89,36 +90,174 @@ window.addEventListener("load", function () {
                 outputFrame.contentWindow.document.write(code);
                 outputFrame.contentWindow.document.close();
             };
-            
+
             // تحميل المحتوى أول مرة
             loadContent();
-            
+
             // إضافة حدث لإغلاق النافذة
-            closeButton.addEventListener("click", function() {
+            closeButton.addEventListener("click", function () {
                 outputDiv.style.display = "none";
             });
-            
-            // إضافة حدث لإعادة تحميل المحتوى
-            reloadButton.addEventListener("click", function() {
+
+            // إعادة تحميل المحتوى
+            reloadButton.addEventListener("click", function () {
                 loadContent();
-                // إضافة تأثير مرئي للإشارة إلى إعادة التحميل
-                // reloadButton.style.transform = "rotate(360deg)";
-                // reloadButton.style.transition = "transform 0.5s";
                 setTimeout(() => {
                     reloadButton.style.transform = "rotate(0deg)";
                 }, 500);
             });
+
+            // توليد رابط Blob للفريم
+            const generateFrameBlobUrl = () => {
+                const code = editor.getValue();
+                const blob = new Blob([code], { type: 'text/html' });
+                return URL.createObjectURL(blob);
+            };
+
+            // زر نسخ رابط الفريم
+            copyFrameUrlButton.addEventListener("click", () => {
+                const blobUrl = generateFrameBlobUrl();
+                navigator.clipboard.writeText(blobUrl).then(() => {
+                    copyFrameUrlButton.innerHTML = 'Copied';
+                    setTimeout(() => {
+                        copyFrameUrlButton.innerHTML = 'Copy link';
+                    }, 1000);
+                }).catch(err => {
+                    alert("فشل نسخ الرابط.");
+                });
+            });
+
+            // زر مشاركة رابط الفريم
+            shareFrameUrlButton.addEventListener("click", () => {
+                const blobUrl = generateFrameBlobUrl();
+                if (navigator.share) {
+                    navigator.share({
+                        title: "عرض الكود",
+                        url: blobUrl
+                    }).catch(err => {
+                        alert("فشل المشاركة.");
+                    });
+                } else {
+                    alert("مشاركة الرابط غير مدعومة.");
+                }
+            });
+
+            // زر ملء الشاشة
+            fullscreenButton.addEventListener("click", () => {
+                if (outputDiv.requestFullscreen) {
+                    outputDiv.requestFullscreen();
+                } else if (outputDiv.webkitRequestFullscreen) {
+                    outputDiv.webkitRequestFullscreen();
+                } else if (outputDiv.msRequestFullscreen) {
+                    outputDiv.msRequestFullscreen();
+                }
+            });
+
+            // التفاعل مع الأخطاء في الـ iframe
+            const errorConsole = document.getElementById("error-console");
+            errorConsole.innerHTML = ""; // تفريغ الأخطاء القديمة
+            errorConsole.style.display = "none"; // إخفاء الديف مؤقتًا
+
+            const iframeWindow = outputFrame.contentWindow;
+
+            // إعادة تعريف console.error داخل iframe
+            iframeWindow.console.error = function (...args) {
+                errorConsole.style.display = "block";
+
+                args.forEach(err => {
+                    const errorMessage = typeof err === 'string' ? err : (err.message || JSON.stringify(err));
+                    
+                    const errorDiv = document.createElement("div");
+                    errorDiv.innerHTML = `
+                        <button class="xx0">
+                            <div id="edw" style="margin-right: 10px;"></diV>
+                            <span>${errorMessage}</span>
+                        </button>
+                    `;
+                    
+                    errorConsole.appendChild(errorDiv.firstElementChild);
+                });
+            };
+
+            // التقط أخطاء JavaScript داخل iframe
+            iframeWindow.onerror = function (message, source, lineno, colno, error) {
+                errorConsole.style.display = "block";
+                
+                const errorHTML = `
+                    <button class="xx0">
+                        <div id="edw" style="margin-right: 10px;"></diV>
+                        <span>${message} at line ${lineno}, column ${colno}</span>
+                    </button>
+                `;
+                
+                errorConsole.insertAdjacentHTML('beforeend', errorHTML);
+                return false; // للسماح بإظهار الخطأ أيضًا في console المتصفح العادي
+            };
+
+            // استخدم try...catch داخل iframe للتقاط الأخطاء التي تحدث أثناء التحميل
+            try {
+                outputFrame.contentWindow.eval(editor.getValue());
+            } catch (e) {
+                console.error("خطأ في الكود داخل الـ iframe:", e);
+            }
         });
 
-        // إضافة الأزرار إلى الحاوية
+        // زر فتح ملف متعدد
+        const openFileButton = document.createElement("button");
+        openFileButton.innerHTML = '<ion-icon name="folder-open"></ion-icon>';
+        openFileButton.title = "فتح ملفات من الجهاز";
+
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = ".txt,.js,.html,.css,.json,.xml";
+        fileInput.multiple = true; // السماح بتحميل ملفات متعددة
+        fileInput.style.display = "none";
+
+        openFileButton.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", function () {
+            const files = this.files;
+            const fileReaders = [];
+            let loadedFilesCount = 0;
+            let code = '';
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    loadedFilesCount++;
+                    code += e.target.result; // إضافة محتوى الملف إلى المتغير
+
+                    if (loadedFilesCount === files.length) {
+                        // عند تحميل جميع الملفات
+                        editor.setValue(code);
+                        openFileButton.title = `تم تحميل: ${files.length} ملفات`;
+                    }
+                };
+
+                reader.readAsText(file);
+                fileReaders.push(reader);
+            }
+        });
+
+        // إضافة الأزرار للحاوية
         buttonsContainer.appendChild(copyButton);
         buttonsContainer.appendChild(shareButton);
         buttonsContainer.appendChild(runButton);
+        buttonsContainer.appendChild(openFileButton);
+        buttonsContainer.appendChild(fileInput); // مخفي
 
-        // إضافة الأزرار أسفل كل محرر
+        // إلحاق الحاوية بأسفل المحرر
         textarea.parentElement.appendChild(buttonsContainer);
     });
 });
+
+
+
+
 
 
 
@@ -273,6 +412,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 
+
+  
   document.addEventListener('DOMContentLoaded', function () {
     const buttons = document.querySelectorAll('.click-button');
     const allMenus = document.querySelectorAll('.menu3');
@@ -284,45 +425,44 @@ document.addEventListener('DOMContentLoaded', function() {
   
       button.addEventListener('click', (e) => {
         e.stopPropagation();
-  
-        // إغلاق جميع القوائم الأخرى
-        allMenus.forEach(m => m.style.display = 'none');
-  
-        // الحصول على موقع الزر
+      
+        // إغلاق القوائم الأخرى
+        allMenus.forEach(m => {
+          m.style.display = 'none';
+        });
+      
+        // إظهار مؤقت للقائمة لأخذ أبعادها بدقة
+        menu3.style.visibility = 'hidden';
+        menu3.style.display = 'block';
+      
         const rect = button.getBoundingClientRect();
-        const menu3Width = menu3.offsetWidth || 150;
-        const menu3Height = menu3.offsetHeight || 120;
+        const menuWidth = menu3.offsetWidth;
+        const menuHeight = menu3.offsetHeight;
         const margin = 5;
-  
+      
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
-  
-        // حساب المسافة الدقيقة مع الأخذ في الاعتبار التمرير
-        let left = rect.left + window.scrollX;
-        let top = rect.bottom + window.scrollY + margin;
-  
-        // التأكد من عدم تجاوز القائمة لحدود النافذة
-        if (rect.left + menu3Width > windowWidth) {
-          left = rect.right + window.scrollX - menu3Width;
+      
+        let left = rect.left;
+        let top = rect.bottom + margin;
+      
+        if (left + menuWidth > windowWidth) {
+          left = windowWidth - menuWidth - margin;
           if (left < 0) left = 0;
         }
-  
-        if (rect.bottom + menu3Height > windowHeight) {
-          top = rect.top + window.scrollY - menu3Height - margin;
+      
+        if (top + menuHeight > windowHeight) {
+          top = rect.top - menuHeight - margin;
           if (top < 0) top = 0;
         }
-  
-        // تعيين الموقع الجديد للقائمة
+      
         menu3.style.left = `${left}px`;
         menu3.style.top = `${top}px`;
-        menu3.style.display = 'block';
-  
-        // إظهار الغطاء
+        menu3.style.visibility = 'visible';
         overlay.style.display = 'block';
-      });
+      });      
     });
   
-    // دالة لإغلاق القوائم
     function closeMenus() {
       document.querySelectorAll('.menu3').forEach(menu3 => {
         menu3.style.display = 'none';
@@ -330,8 +470,22 @@ document.addEventListener('DOMContentLoaded', function() {
       overlay.style.display = 'none';
     }
   
-    // إغلاق القائمة عند النقر أو اللمس على الغطاء
     overlay.addEventListener('mousedown', closeMenus);
     overlay.addEventListener('touchstart', closeMenus);
   });
   
+
+  // الحصول على الأزرار والديف
+const showButton = document.getElementById('showButton');
+const popupDiv = document.getElementById('popupDiv');
+const closeButton = document.getElementById('hide-error-console');
+
+// إظهار الديف عند النقر على زر "أظهر الديف"
+showButton.addEventListener('click', () => {
+  popupDiv.style.display = 'block';
+});
+
+// إغلاق الديف عند النقر على زر "إغلاق"
+closeButton.addEventListener('click', () => {
+  popupDiv.style.display = 'none';
+});
