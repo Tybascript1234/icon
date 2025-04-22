@@ -42,7 +42,7 @@
             <!-- 1 -->
             <work class="editor-container">
                 <textarea name="" class="editor">
-<h1>Hello مرحبا</h1>
+<h1>Hello bro</h1>
 <br>
 <script src="https://tybascript1234.github.io/Languag/embed.js"></script>
 <div id="target-container"></div>
@@ -193,7 +193,7 @@
                 <div class="open-eui-input">
                     <div class="ddo" style="position: relative;">
                         <button style="width: auto;" class="click-button" data-menu="menu2"><ion-icon name="information-circle-outline" style="margin-right: 4px;"></ion-icon><a>Features</a></button>
-                        <div class="menu3" id="menu2">
+                        <div class="menu3" id="menu2" style="padding: 10px;">
                             <div>Strong, secure site powered by <a href="" style="color: #0d6efd;">Canyon</a></div>
                           </div>
                     </div>
@@ -207,14 +207,28 @@
                     <button class="close-btn"><ion-icon name="arrow-forward-outline"></ion-icon></button>
                     <button class="click-button" data-menu="menu1"><ion-icon name="settings-outline"></ion-icon></button>
                     <div class="menu3" id="menu1">
-                        <div class="menu-item">Copy link</div>
-                        <div class="menu-item">Share link</div>
-                        <div class="menu-item">Full screen</div>
+                        <div class="menu-item">New tab</div>
+                        <div class="menu-item">New window</div>
+                        <hr style="margin: 4px 0;">
+                        <div class="menu-item" id="copy-frame-url">Copy link</div>
+                        <div class="menu-item" id="share-frame-url">Share link</div>
+                        <div class="menu-item" id="fullscreen-frame">Full screen</div>
+                        <hr style="margin: 4px 0;">
+                        <div class="menu-item" id="showButton">Inspect</div>
                       </div>
                 </div>
             </div>
             <!-- -------- -->
             <div class="ssd"><iframe class="ssd" id="output-frame" src="" frameborder="0"></iframe></div>
+            <div class="error-container" id="popupDiv">
+                <div class="open-eui-menu" style="height: 35px;">
+                    <div><div class="logo notranslate"><span>Inspect</span></div></div>
+                    <div class="ewwk">
+                        <button id="hide-error-console"><ion-icon name="close-outline"></ion-icon></button>
+                    </div>
+                </div>
+                <div class="ssd" id="error-console" style="overflow-y: auto;height: -webkit-fill-available;margin-top: 35px;"></div>
+            </div>
         </div>
 
     
