@@ -692,7 +692,7 @@ body .bold::before {
     position: sticky;
     top: 0;
     background: white;
-    z-index: 2000;
+    z-index: 100;
     padding: 0px 5px;
     height: 40px;
     display: flex;
@@ -793,19 +793,23 @@ body .bold::before {
     border: 1px solid #ccc;
     padding: 10px 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 1500;
+    z-index: 15000000;
     margin-right: 5px;
-    min-width: 130px;
+    min-width: 170px;
   }
 
   .menu-item {
-    padding: 5px 20px;
+    padding: 0px 20px;
+    height: 40px;
+    font-size: 14.5px;
+    display: flex;
+    color: #3b4a54;
+    align-items: center;
     cursor: pointer;
   }
 
   .menu-item:hover {
-    color: #0d6efd;
-    background-color: #f0f0f0;
+    background-color: rgb(245 246 246);
   }
 
   .overlay {
@@ -844,21 +848,29 @@ body .bold::before {
     padding: 8px 16px;
     width: -webkit-fill-available;
     border: none;
-    background: #0000;
+    background: #fcebeb;
+    margin: 7px;
     justify-content: left;
-  }
-  .xx0:hover {
-    background: #6973840e;
+    border-radius: 8px;
   }
   .xx0:focus {
-    background: #6973842a;
+    outline: dotted;
+    outline-width: 1px;
+    outline-color: #8d0000;
   }
   .xx0 span {
-    user-select: all;
+    color: rgb(7 92 203);
+    flex: 1 1 auto;
+    user-select: text;
+    width: -webkit-fill-available;
+    text-align: left;
+  }
+  .xx0:hover  span{
+    text-decoration: underline;
   }
   #edw {
     background-image: url(https://cdn-icons-png.flaticon.com/512/463/463612.png);
     background-size: cover;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
