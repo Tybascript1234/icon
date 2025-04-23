@@ -1,4 +1,26 @@
 window.addEventListener("load", function () {
+    // إنشاء عنصر error-console إذا لم يكن موجوداً
+    if (!document.getElementById("error-console")) {
+        const errorConsole = document.createElement("div");
+        errorConsole.id = "error-console";
+        errorConsole.style.cssText = `
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #1e1e1e;
+            color: #f1f1f1;
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            border-top: 1px solid #444;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        `;
+        document.body.appendChild(errorConsole);
+    }
+
     // حدد جميع عناصر textarea مع الفئة "editor"
     const editors = document.querySelectorAll(".editor");
 
@@ -79,6 +101,7 @@ window.addEventListener("load", function () {
             const copyFrameUrlButton = document.getElementById("copy-frame-url");
             const shareFrameUrlButton = document.getElementById("share-frame-url");
             const fullscreenButton = document.getElementById("fullscreen-frame");
+            const errorConsole = document.getElementById("error-console");
 
             // عرض الـ div
             outputDiv.style.display = "block";
@@ -153,45 +176,216 @@ window.addEventListener("load", function () {
                 }
             });
 
-            // التفاعل مع الأخطاء في الـ iframe
-            const errorConsole = document.getElementById("error-console");
+            // إعداد وحدة عرض الأخطاء
             errorConsole.innerHTML = ""; // تفريغ الأخطاء القديمة
             errorConsole.style.display = "none"; // إخفاء الديف مؤقتًا
 
             const iframeWindow = outputFrame.contentWindow;
+            const iframeDocument = outputFrame.contentDocument || iframeWindow.document;
 
-            // إعادة تعريف console.error داخل iframe
-            iframeWindow.console.error = function (...args) {
+            // متغير لتتبع عدد الصور المكسورة
+            let brokenImagesCount = 0;
+            let imagesChecked = 0;
+            let totalImages = 0;
+
+            // دالة لعرض خطأ الصورة (قابلة للنقر)
+            const showImageError = (img) => {
+                const imgSrc = img.src || 'بدون مصدر';
+                const errorMessage = `رابط صورة مكسور: ${imgSrc}`;
+                
+                const errorDiv = document.createElement("div");
+                const errorButton = document.createElement("button");
+                errorButton.className = "xx0";
+                errorButton.style.color = "#F44336";
+                errorButton.style.cursor = "pointer";
+                
+                errorButton.innerHTML = `
+                    <div id="edw" style="margin-right: 10px;"></div>
+                    <span>${errorMessage}</span>
+                `;
+                
+                // إذا كان هناك رابط للصورة، اجعل الزر قابلاً للنقر
+                if (img.src) {
+                    errorButton.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        window.open(img.src, '_blank');
+                    });
+                }
+                
+                errorDiv.appendChild(errorButton);
+                errorConsole.appendChild(errorDiv);
                 errorConsole.style.display = "block";
+            };
 
-                args.forEach(err => {
-                    const errorMessage = typeof err === 'string' ? err : (err.message || JSON.stringify(err));
-                    
-                    const errorDiv = document.createElement("div");
-                    errorDiv.innerHTML = `
-                        <button class="xx0">
-                            <div id="edw" style="margin-right: 10px;"></diV>
-                            <span>${errorMessage}</span>
+            // دالة لعرض رسائل الكونسول (قابلة للنقر إذا احتوت على روابط)
+            const showConsoleMessage = (message, type) => {
+                const colors = {
+                    error: "#F44336",
+                    warn: "#FFC107",
+                    log: "#4CAF50"
+                };
+                
+                const messageDiv = document.createElement("div");
+                const messageButton = document.createElement("button");
+                messageButton.className = "xx0";
+                messageButton.style.color = colors[type] || "#FFFFFF";
+                messageButton.style.cursor = "pointer";
+                
+                // استخراج الروابط من الرسالة
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                const urls = message.match(urlRegex);
+                let displayMessage = message;
+                
+                if (urls && urls.length > 0) {
+                    // إذا وجد روابط في الرسالة، اجعل الزر قابلاً للنقر
+                    messageButton.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        window.open(urls[0], '_blank');
+                    });
+                }
+                
+                messageButton.innerHTML = `
+                    <div id="edw" style="margin-right: 10px;"></div>
+                    <span>${displayMessage}</span>
+                `;
+                
+                messageDiv.appendChild(messageButton);
+                errorConsole.appendChild(messageDiv);
+                errorConsole.style.display = "block";
+            };
+
+            // دالة للكشف عن الصور المكسورة
+            const checkForBrokenImages = () => {
+                const images = iframeDocument.getElementsByTagName('img');
+                totalImages = images.length;
+                brokenImagesCount = 0;
+                imagesChecked = 0;
+
+                if (totalImages === 0) {
+                    // إذا لم يكن هناك صور
+                    const successDiv = document.createElement("div");
+                    successDiv.innerHTML = `
+                        <button class="xx0" style="color: #4CAF50;">
+                            <div id="edw" style="margin-right: 10px;"></div>
+                            <span>لا توجد روابط صور في الصفحة</span>
                         </button>
                     `;
-                    
-                    errorConsole.appendChild(errorDiv.firstElementChild);
+                    errorConsole.appendChild(successDiv.firstElementChild);
+                    errorConsole.style.display = "block";
+                    return;
+                }
+
+                for (let img of images) {
+                    // إذا كانت الصورة قد تحملت بالفعل
+                    if (img.complete) {
+                        imagesChecked++;
+                        if (img.naturalWidth === 0) {
+                            brokenImagesCount++;
+                            showImageError(img);
+                        }
+                    } else {
+                        // إضافة معالج للأخطاء للصور التي لم تحمل بعد
+                        img.onerror = function() {
+                            brokenImagesCount++;
+                            showImageError(img);
+                            imagesChecked++;
+                            checkCompletion();
+                        };
+                        img.onload = function() {
+                            imagesChecked++;
+                            checkCompletion();
+                        };
+                    }
+                }
+
+                // التحقق من اكتمال الفحص للصور التي تحملت بالفعل
+                checkCompletion();
+            };
+
+            // دالة للتحقق من اكتمال فحص جميع الصور
+            const checkCompletion = () => {
+                if (imagesChecked === totalImages) {
+                    if (brokenImagesCount === 0 && totalImages > 0) {
+                        const successDiv = document.createElement("div");
+                        successDiv.innerHTML = `
+                            <button class="xx0" style="color: #4CAF50;">
+                                <div id="edw" style="margin-right: 10px;"></div>
+                                <span>تم تحميل جميع روابط الصور بنجاح</span>
+                            </button>
+                        `;
+                        errorConsole.appendChild(successDiv.firstElementChild);
+                        errorConsole.style.display = "block";
+                    }
+                }
+            };
+
+            // إعادة تعريف console.log و console.error داخل iframe
+            iframeWindow.console.log = function (...args) {
+                args.forEach(msg => {
+                    const message = typeof msg === 'string' ? msg : (msg.message || JSON.stringify(msg));
+                    showConsoleMessage(message, 'log');
                 });
             };
 
-            // التقط أخطاء JavaScript داخل iframe
+            iframeWindow.console.error = function (...args) {
+                args.forEach(err => {
+                    const errorMessage = typeof err === 'string' ? err : (err.message || JSON.stringify(err));
+                    showConsoleMessage(errorMessage, 'error');
+                });
+            };
+
+            iframeWindow.console.warn = function (...args) {
+                args.forEach(warn => {
+                    const warningMessage = typeof warn === 'string' ? warn : (warn.message || JSON.stringify(warn));
+                    showConsoleMessage(warningMessage, 'warn');
+                });
+            };
+
+            // التقط أخطاء JavaScript داخل iframe (قابلة للنقر إذا كان هناك مصدر)
             iframeWindow.onerror = function (message, source, lineno, colno, error) {
                 errorConsole.style.display = "block";
                 
-                const errorHTML = `
-                    <button class="xx0">
-                        <div id="edw" style="margin-right: 10px;"></diV>
-                        <span>${message} at line ${lineno}, column ${colno}</span>
-                    </button>
+                const errorDiv = document.createElement("div");
+                const errorButton = document.createElement("button");
+                errorButton.className = "xx0";
+                errorButton.style.color = "#F44336";
+                errorButton.style.cursor = source ? "pointer" : "default";
+                
+                errorButton.innerHTML = `
+                    <div id="edw" style="margin-right: 10px;"></div>
+                    <span>${message} at line ${lineno}, column ${colno}</span>
                 `;
                 
-                errorConsole.insertAdjacentHTML('beforeend', errorHTML);
-                return false; // للسماح بإظهار الخطأ أيضًا في console المتصفح العادي
+                // إذا كان هناك مصدر للخطأ (رابط الملف)، اجعل الزر قابلاً للنقر
+                if (source) {
+                    errorButton.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        window.open(source, '_blank');
+                    });
+                }
+                
+                errorDiv.appendChild(errorButton);
+                errorConsole.appendChild(errorDiv);
+                return false;
+            };
+
+            // التحقق من الصور المكسورة بعد تحميل الصفحة
+            outputFrame.onload = function() {
+                checkForBrokenImages();
+                
+                // أيضا التحقق من الصور المكسورة عند حدوث أي تغيير في DOM
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.addedNodes) {
+                            checkForBrokenImages();
+                        }
+                    });
+                });
+
+                observer.observe(iframeDocument, {
+                    childList: true,
+                    subtree: true
+                });
             };
 
             // استخدم try...catch داخل iframe للتقاط الأخطاء التي تحدث أثناء التحميل
@@ -210,7 +404,7 @@ window.addEventListener("load", function () {
         const fileInput = document.createElement("input");
         fileInput.type = "file";
         fileInput.accept = ".txt,.js,.html,.css,.json,.xml";
-        fileInput.multiple = true; // السماح بتحميل ملفات متعددة
+        fileInput.multiple = true;
         fileInput.style.display = "none";
 
         openFileButton.addEventListener("click", () => {
@@ -229,10 +423,9 @@ window.addEventListener("load", function () {
 
                 reader.onload = function (e) {
                     loadedFilesCount++;
-                    code += e.target.result; // إضافة محتوى الملف إلى المتغير
+                    code += e.target.result;
 
                     if (loadedFilesCount === files.length) {
-                        // عند تحميل جميع الملفات
                         editor.setValue(code);
                         openFileButton.title = `تم تحميل: ${files.length} ملفات`;
                     }
@@ -248,13 +441,12 @@ window.addEventListener("load", function () {
         buttonsContainer.appendChild(shareButton);
         buttonsContainer.appendChild(runButton);
         buttonsContainer.appendChild(openFileButton);
-        buttonsContainer.appendChild(fileInput); // مخفي
+        buttonsContainer.appendChild(fileInput);
 
         // إلحاق الحاوية بأسفل المحرر
         textarea.parentElement.appendChild(buttonsContainer);
     });
 });
-
 
 
 
